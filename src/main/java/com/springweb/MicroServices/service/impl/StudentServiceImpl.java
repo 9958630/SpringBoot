@@ -4,16 +4,16 @@ import com.springweb.MicroServices.model.Student;
 import com.springweb.MicroServices.service.StudentService;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class StudentServiceImpl implements StudentService {
+
+    Set<Student> studentList = new HashSet<>();
+
     @Override
     public Student getSearch(String studentNumber) {
-        List<Student> studentList = new ArrayList<>();
         Student student = new Student();
         student.setStudentName("Bala");
         student.setStudentNumber("1234");
@@ -56,8 +56,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public List<Student> getStudentByRollNumber(String rollNo) {
-        List<Student> studentList = new ArrayList<>();
+    public Set<Student> getStudentByRollNumber(String rollNo) {
         Student student = new Student();
         student.setRollNumber("1");
         student.setStudentClass("1st class");
@@ -80,6 +79,38 @@ public class StudentServiceImpl implements StudentService {
         studentList.add(student1);
         studentList.add(student2);
 
-        return studentList.stream().filter(s -> s.getRollNumber().equalsIgnoreCase(rollNo)).collect(Collectors.toList());
+        return studentList.stream().filter(s -> Objects.nonNull(s.getRollNumber()) && s.getRollNumber().equalsIgnoreCase(rollNo)).collect(Collectors.toSet());
+    }
+
+    @Override
+    public String saveStudent(Student student) {
+        if(validateStudents(student)) {
+            studentList.add(student);
+            return "Student record saved successfully";
+        }else{
+            return "Mandatory fields are missing in input request studentNumber and RollNumber";
+        }
+    }
+
+    private boolean validateStudents(Student student) {
+        return Objects.nonNull(student.getStudentNumber()) && Objects.nonNull(student.getRollNumber());
+    }
+
+    @Override
+    public String updateStudent(Student student) {
+        if(validateStudents(student)){
+            Optional<Student> st = studentList.stream().filter(s-> s.getStudentNumber().equalsIgnoreCase(student.getStudentNumber())).findFirst();
+            if(st.isPresent()){
+                st.get().setStudentNumber(student.getStudentNumber());
+                st.get().setStudentClass(student.getStudentClass());
+                st.get().setStudentName(student.getStudentName());
+                st.get().setRollNumber(student.getRollNumber());
+                studentList.add(st.get());
+                return "updated successfully";
+            }else{
+                return "provided student not found in DB";
+            }
+        }
+        return "Mandatory fields are missing";
     }
 }
