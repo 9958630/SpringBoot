@@ -3,6 +3,8 @@ package com.springweb.MicroServices.controller;
 import com.springweb.MicroServices.model.Student;
 import com.springweb.MicroServices.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Primary;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 

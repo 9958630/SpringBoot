@@ -2,6 +2,7 @@ package com.springweb.MicroServices.service.impl;
 
 import com.springweb.MicroServices.model.Student;
 import com.springweb.MicroServices.service.StudentService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -9,6 +10,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class StudentServiceImpl implements StudentService {
+
+
 
     Set<Student> studentList = new HashSet<>();
 
